@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'main.dart'; // We need this to navigate back to LoginPage on logout
+import 'main.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http; // We need this to navigate back to LoginPage on logout
 
 int n = 3; 
 
@@ -58,7 +60,7 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle_rounded),
-            label: 'Divya',
+            label: 'user',
           ),
         ],
       ),
@@ -245,9 +247,50 @@ class _ArcPainter extends CustomPainter {
 // and do not need any changes.
 
 /* ============================ THOUGHT CARD ============================ */
-// ... (The rest of your code is unchanged) ...
-class _ThoughtCard extends StatelessWidget {
+// ... (The rest of your code is unchanged) ..
+class _ThoughtCard extends StatefulWidget {
   const _ThoughtCard();
+
+  @override
+  State<_ThoughtCard> createState() => __ThoughtCardState();
+}
+
+class __ThoughtCardState extends State<_ThoughtCard> {
+  String quote = 'Loading quote...';
+  String author = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchRandomQuote();
+  }
+
+  Future<void> fetchRandomQuote() async {
+    try {
+      final response = await http.get(
+        Uri.parse('https://api.quotable.io/random'),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        setState(() {
+          quote = data['content'];
+          author = data['author'];
+        });
+      } else {
+        setState(() {
+          quote = 'Failed to load quote.';
+          author = '';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        quote = 'Check your internet connection.';
+        author = '';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -273,8 +316,8 @@ class _ThoughtCard extends StatelessWidget {
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
+                    children: [
+                      const Text(
                         'Thought for the day',
                         style: TextStyle(
                           fontSize: 22,
@@ -282,15 +325,26 @@ class _ThoughtCard extends StatelessWidget {
                           color: Colors.black,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
-                        'When we teach with curiosity, joy, and\ncare, children carry learning for life.',
-                        style: TextStyle(
+                        quote,
+                        style: const TextStyle(
                           fontSize: 14,
                           height: 1.35,
                           color: Colors.black87,
                         ),
                       ),
+                      if (author.isNotEmpty) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          '- $author',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontStyle: FontStyle.italic,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -328,7 +382,6 @@ class _ThoughtCard extends StatelessWidget {
     );
   }
 }
-
 /* =============================== GRID =============================== */
 class _TopGridRow extends StatelessWidget {
   const _TopGridRow();
