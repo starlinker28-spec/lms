@@ -2,6 +2,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'main.dart'; // We need this to navigate back to LoginPage on logout
 
+int n = 3; 
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -16,8 +18,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF3F1ED), // light warm bg
-      body: SafeArea(
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
           // Add some bottom padding to prevent the nav bar from covering content
           padding: const EdgeInsets.only(bottom: 88),
           child: Column(
@@ -33,7 +34,6 @@ class _HomePageState extends State<HomePage> {
               _BottomGridRow(),
             ],
           ),
-        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _tab,
@@ -75,14 +75,15 @@ class _HeaderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 340,
-      margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [Color(0xFF7B4B84), Color(0xFF9D6EA6)],
         ),
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(30),
+          bottomRight: Radius.circular(30)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.14),
@@ -91,11 +92,10 @@ class _HeaderCard extends StatelessWidget {
           ),
         ],
       ),
+      child: SafeArea(
+       bottom: false,
       child: Stack(
         children: [
-          // Arcs behind the avatar (progress arc)
-          Positioned.fill(child: CustomPaint(painter: _ArcPainter())),
-
           // Top Row: greeting + small avatar emoji
           Positioned(
             top: 18,
@@ -103,7 +103,7 @@ class _HeaderCard extends StatelessWidget {
             child: Row(
               children: const [
                 Text(
-                  'Hey Divya',
+                  'Hey User',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -160,11 +160,16 @@ class _HeaderCard extends StatelessWidget {
             ),
           ),
 
-          // Title centered ABOVE the arc (Adjusted position)
+          // --- FIX APPLIED HERE ---
+          // 1. Arcs are drawn first (bottom layer)
+          Positioned.fill(child: CustomPaint(painter: _ArcPainter())),
+
+          // 2. Text is drawn second (on top of the arc)
+          //    Position is also updated to match Figma
           const Align(
-            alignment: Alignment(0, -0.75), // MOVED UP
+            alignment: Alignment(0, -0.65), // MOVED UP to match Figma
             child: Text(
-              'Learning Level 3',
+              'Learning Level n',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
@@ -173,10 +178,11 @@ class _HeaderCard extends StatelessWidget {
               ),
             ),
           ),
-
-          // Avatar centered
+          
+          // 3. Avatar centered (drawn last, on top of text and arc)
+          //    Position is also updated to match Figma
           Align(
-            alignment: const Alignment(0, 0.58),
+            alignment: const Alignment(0, 0.4), // MOVED UP to match Figma
             child: Container(
               width: 150,
               height: 150,
@@ -186,8 +192,10 @@ class _HeaderCard extends StatelessWidget {
               ),
             ),
           ),
+          // --- END OF FIX ---
         ],
       ),
+      )
     );
   }
 }
@@ -196,7 +204,7 @@ class _ArcPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     // Place the arc just above the avatar (Adjusted position)
-    final center = Offset(size.width / 2, size.height * 0.72); // MOVED DOWN
+    final center = Offset(size.width / 2, size.height * 0.8); // MOVED UP
     final radius = size.width * 0.38;
 
     final mainArc = Paint()
