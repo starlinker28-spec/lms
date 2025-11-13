@@ -67,7 +67,6 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  
   Future<void> signInWithGoogle() async {
     // Only run on supported platforms
     if (!(kIsWeb || (Platform.isAndroid || Platform.isIOS))) {
@@ -79,31 +78,31 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _errorMessage = null;
     });
-    
+
     final url = Uri.parse('http://192.168.240.1:8000/api/auth/google/');
-  
+
     try {
       final GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email']);
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
       if (googleUser == null) return;
-  
+
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
       final String? idToken = googleAuth.idToken;
-  
+
       if (idToken == null) {
         setState(() {
           _errorMessage = 'Could not get ID token from Google.';
         });
         return;
       }
-  
+
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'id_token': idToken}),
       );
-  
+
       if (response.statusCode == 200) {
         _navigateToHome();
       } else {
@@ -187,7 +186,7 @@ class _LoginPageState extends State<LoginPage> {
                         controller: _passwordController,
                         obscureText: !_isPasswordVisible,
                         decoration: InputDecoration(
-                          hintText: '*********',
+                          hintText: 'Password',
                           filled: true,
                           fillColor: const Color(0xFFF0F0F0),
                           border: OutlineInputBorder(
