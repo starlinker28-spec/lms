@@ -1,16 +1,20 @@
-# lms_app
+# [Nurture] 📚
 
-A new Flutter project.
+A modern Learning Management System (LMS) built with a **Flutter** frontend and a **Django** backend.
 
-## Getting Started
+This project is designed to provide a seamless and responsive e-learning experience, allowing students to access course materials on the go, while administrators and instructors can manage content through a powerful backend.
 
-This project is a starting point for a Flutter application.
+## ✨ Core Features
 
-A few resources to get you started if this is your first Flutter project:
+* **Cross-Platform UI:** A single, beautiful codebase using Flutter for a native feel on both iOS and Android.
+* **Secure API:** A robust and scalable backend powered by Django, with a RESTful API built using Django REST Framework.
+* **User Authentication:** Secure registration, login, and profile management for students and instructors.
+* **Course Management:** Easy creation, updating, and organization of courses, modules, and lessons.
+* **Student Dashboard:** A personalized dashboard for students to track their enrolled courses and progress.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 🛠️ Technology Stack
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* **Frontend:** Flutter
+* **Backend:** Django
+* **API:** Django REST Framework
+* **Database:** SQLite (development) / PostgreSQL (production)
